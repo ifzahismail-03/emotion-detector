@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EmotionAI</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+
+            background:
+                radial-gradient(circle at 10% 10%, rgba(99,102,241,0.18), transparent 30%),
+                radial-gradient(circle at 90% 80%, rgba(14,165,233,0.15), transparent 30%),
+                #070b14;
+
+            color: white;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        header {
+            height: 80px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 45px;
+
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+
+            background: rgba(7,11,20,0.75);
+
+            backdrop-filter: blur(15px);
+        }
+
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+
+            background: linear-gradient(
+                135deg,
+                #6366f1,
+                #06b6d4
+            );
+
+            box-shadow:
+                0 0 25px rgba(99,102,241,0.4);
+        }
+
+
+        .logo h1 {
+            font-size: 22px;
+            letter-spacing: 0.5px;
+        }
+
+
+        .logo span {
+            color: #818cf8;
+        }
+
+
+        .live-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 9px 15px;
+
+            border-radius: 30px;
+
+            background: rgba(34,197,94,0.1);
+
+            border: 1px solid rgba(34,197,94,0.25);
+
+            color: #86efac;
+
+            font-size: 13px;
+        }
+
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #22c55e;
+
+            box-shadow: 0 0 10px #22c55e;
+
+            animation: pulse 1.5s infinite;
+        }
+
+
+        @keyframes pulse {
+
+            0%,100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.35;
+            }
+
+        }
+
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .container {
+            max-width: 1400px;
+
+            margin: auto;
+
+            padding: 40px 30px;
+        }
+
+
+        .hero {
+            margin-bottom: 30px;
+        }
+
+
+        .hero h2 {
+            font-size: 38px;
+
+            background: linear-gradient(
+                90deg,
+                #ffffff,
+                #a5b4fc
+            );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+
+        .hero p {
+            margin-top: 8px;
+
+            color: #8b95a7;
+
+            font-size: 15px;
+        }
+
+
+        /* =========================
+           DASHBOARD
+        ========================= */
+
+        .dashboard {
+
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1.8fr)
+                minmax(320px, 0.8fr);
+
+            gap: 25px;
+        }
+
+
+        .card {
+
+            background: rgba(17,24,39,0.65);
+
+            border: 1px solid rgba(255,255,255,0.08);
+
+            border-radius: 24px;
+
+            backdrop-filter: blur(18px);
+
+            box-shadow:
+                0 20px 60px rgba(0,0,0,0.35);
+        }
+
+
+        /* =========================
+           CAMERA
+        ========================= */
+
+        .camera-card {
+            padding: 20px;
+        }
+
+
+        .camera-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 16px;
+        }
+
+
+        .camera-header h3 {
+            font-size: 18px;
+        }
+
+
+        .camera-label {
+
+            color: #8994a8;
+
+            font-size: 13px;
+        }
+
+
+        .camera-box {
+
+            position: relative;
+
+            width: 100%;
+
+            height: 560px;
+
+            border-radius: 18px;
+
+            overflow: hidden;
+
+            background: #020617;
+
+            border: 1px solid rgba(255,255,255,0.07);
+        }
+
+
+        .camera-box::before {
+
+            content: "";
+
+            position: absolute;
+
+            inset: 0;
+
+            pointer-events: none;
+
+            z-index: 2;
+
+            background:
+                linear-gradient(
+                    rgba(255,255,255,0.02) 1px,
+                    transparent 1px
+                );
+
+            background-size: 100% 5px;
+
+            opacity: 0.2;
+        }
+
+
+        .camera-box img {
+
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: contain;
+        }
+
+
+        .camera-corner {
+
+            position: absolute;
+
+            width: 25px;
+            height: 25px;
+
+            border-color: #6366f1;
+
+            z-index: 3;
+        }
+
+
+        .corner-tl {
+            top: 15px;
+            left: 15px;
+            border-top: 2px solid;
+            border-left: 2px solid;
+        }
+
+
+        .corner-tr {
+            top: 15px;
+            right: 15px;
+            border-top: 2px solid;
+            border-right: 2px solid;
+        }
+
+
+        .corner-bl {
+            bottom: 15px;
+            left: 15px;
+            border-bottom: 2px solid;
+            border-left: 2px solid;
+        }
+
+
+        .corner-br {
+            bottom: 15px;
+            right: 15px;
+            border-bottom: 2px solid;
+            border-right: 2px solid;
+        }
+
+
+        /* =========================
+           RESULT
+        ========================= */
+
+        .result-card {
+
+            padding: 28px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+        }
+
+
+        .result-label {
+
+            font-size: 12px;
+
+            color: #818cf8;
+
+            text-transform: uppercase;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 18px;
+        }
+
+
+        .emotion-circle {
+
+            width: 145px;
+            height: 145px;
+
+            margin: 5px auto 25px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 70px;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(99,102,241,0.2),
+                    rgba(99,102,241,0.03)
+                );
+
+            border: 1px solid rgba(129,140,248,0.3);
+
+            box-shadow:
+                0 0 50px rgba(99,102,241,0.15);
+
+            animation: float 3s ease-in-out infinite;
+        }
+
+
+        @keyframes float {
+
+            0%,100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-7px);
+            }
+
+        }
+
+
+        .emotion-name {
+
+            text-align: center;
+
+            font-size: 38px;
+
+            font-weight: 700;
+
+            text-transform: capitalize;
+
+            margin-bottom: 8px;
+        }
+
+
+        .confidence-text {
+
+            text-align: center;
+
+            color: #8b95a7;
+
+            font-size: 14px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .confidence-box {
+
+            background: rgba(255,255,255,0.05);
+
+            border-radius: 20px;
+
+            padding: 5px;
+
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+
+        .confidence-bar {
+
+            height: 12px;
+
+            width: 0%;
+
+            border-radius: 20px;
+
+            background: linear-gradient(
+                90deg,
+                #6366f1,
+                #06b6d4
+            );
+
+            box-shadow:
+                0 0 15px rgba(99,102,241,0.5);
+
+            transition: width 0.5s ease;
+        }
+
+
+        .confidence-value {
+
+            text-align: center;
+
+            margin-top: 12px;
+
+            font-size: 25px;
+
+            font-weight: bold;
+
+            color: #a5b4fc;
+        }
+
+
+        /* =========================
+           INFO
+        ========================= */
+
+        .info-section {
+
+            margin-top: 30px;
+
+            padding-top: 22px;
+
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+
+        .info-section h4 {
+
+            font-size: 14px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .info-section p {
+
+            color: #7f8a9d;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+
+        .tech-tags {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 7px;
+
+            margin-top: 15px;
+        }
+
+
+        .tag {
+
+            padding: 6px 10px;
+
+            border-radius: 8px;
+
+            font-size: 11px;
+
+            color: #a5b4fc;
+
+            background: rgba(99,102,241,0.1);
+
+            border: 1px solid rgba(99,102,241,0.15);
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+
+            text-align: center;
+
+            padding: 25px;
+
+            color: #566174;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media(max-width: 900px) {
+
+            header {
+                padding: 0 20px;
+            }
+
+            .container {
+                padding: 25px 15px;
+            }
+
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .camera-box {
+                height: 400px;
+            }
+
+            .hero h2 {
+                font-size: 30px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            🧠
+        </div>
+
+        <h1>
+            Emotion<span>AI</span>
+        </h1>
+
+    </div>
+
+
+    <div class="live-status">
+
+        <div class="live-dot"></div>
+
+        AI SYSTEM ONLINE
+
+    </div>
+
+</header>
+
+
+
+<div class="container">
+
+
+    <div class="hero">
+
+        <h2>
+            Real-Time Emotion Intelligence
+        </h2>
+
+        <p>
+            Facial expression analysis powered by computer vision and deep learning.
+        </p>
+
+    </div>
+
+
+
+    <div class="dashboard">
+
+
+        <!-- CAMERA -->
+
+        <div class="card camera-card">
+
+            <div class="camera-header">
+
+                <div>
+                    <h3>Live Vision</h3>
+
+                    <div class="camera-label">
+                        Real-time facial analysis
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="camera-box">
+
+                <div class="camera-corner corner-tl"></div>
+                <div class="camera-corner corner-tr"></div>
+                <div class="camera-corner corner-bl"></div>
+                <div class="camera-corner corner-br"></div>
+
+
+                <img
+                    src="{{ url_for('video_feed') }}"
+                    alt="Live Camera"
+                >
+
+            </div>
+
+        </div>
+
+
+
+        <!-- RESULT -->
+
+        <div class="card result-card">
+
+
+            <div class="result-label">
+                Current Detection
+            </div>
+
+
+            <div
+                class="emotion-circle"
+                id="emotionIcon"
+            >
+                🤔
+            </div>
+
+
+            <div
+                class="emotion-name"
+                id="emotionName"
+            >
+                Detecting...
+            </div>
+
+
+            <div
+                class="confidence-text"
+            >
+                AI prediction confidence
+            </div>
+
+
+            <div class="confidence-box">
+
+                <div
+                    class="confidence-bar"
+                    id="confidenceBar"
+                ></div>
+
+            </div>
+
+
+            <div
+                class="confidence-value"
+                id="confidenceValue"
+            >
+                --
+            </div>
+
+
+
+            <div class="info-section">
+
+                <h4>
+                    About this system
+                </h4>
+
+                <p>
+                    EmotionAI detects facial expressions from
+                    the live camera and classifies them using
+                    a deep-learning facial expression model.
+                </p>
+
+
+                <div class="tech-tags">
+
+                    <span class="tag">
+                        OpenCV
+                    </span>
+
+                    <span class="tag">
+                        PyTorch
+                    </span>
+
+                    <span class="tag">
+                        Vision Transformer
+                    </span>
+
+                    <span class="tag">
+                        Flask
+                    </span>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<footer>
+
+    EmotionAI • Real-Time Facial Expression Recognition
+
+</footer>
+
+
+
+<script>
+
+
+    const emotionIcons = {
+
+        happy: "😄",
+
+        sad: "😢",
+
+        angry: "😠",
+
+        fear: "😨",
+
+        surprise: "😲",
+
+        disgust: "🤢",
+
+        neutral: "😐"
+
+    };
+
+
+    async function updateEmotion() {
+
+        try {
+
+            const response =
+                await fetch("/emotion");
+
+            const data =
+                await response.json();
+
+
+            const emotion =
+                data.emotion.toLowerCase();
+
+            const confidence =
+                data.confidence;
+
+
+            document.getElementById(
+                "emotionName"
+            ).textContent = emotion;
+
+
+            document.getElementById(
+                "confidenceValue"
+            ).textContent =
+                confidence.toFixed(1) + "%";
+
+
+            document.getElementById(
+                "confidenceBar"
+            ).style.width =
+                confidence + "%";
+
+
+            document.getElementById(
+                "emotionIcon"
+            ).textContent =
+                emotionIcons[emotion] || "🤔";
+
+
+        }
+
+        catch(error) {
+
+            console.log(
+                "Could not get emotion data"
+            );
+
+        }
+
+    }
+
+
+    setInterval(
+        updateEmotion,
+        500
+    );
+
+
+    updateEmotion();
+
+
+</script>
+
+
+</body>
+
+</html>

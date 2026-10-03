@@ -1,0 +1,9 @@
+opencv-python==4.13.0.92
+torch
+torchvision
+numpy
+pillow
+timm
+transformers
+huggingface_hub
+flask
